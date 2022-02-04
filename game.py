@@ -209,10 +209,11 @@ class Game:
 
     def win(self):
         items = [rock, scissors, paper]
-        print("Победа!")
+        print("\n\033[32mПобеда!\033[0m")
+        print("Получено опыта:")
         for i in items:
             exp = i.exp * data["modifications"]["expirience"]["win"]
-            print(locale["level"]["get_exp_win"].format(
+            print("  " + locale["level"]["get_exp_win"].format(
                 player=i.name,
                 exp=round(exp - i.exp, 1),
                 old_exp=round(i.exp, 1),
@@ -223,10 +224,11 @@ class Game:
 
     def lose(self):
         items = [rock, scissors, paper]
-        print("Поражение...")
+        print("\n\033[31mПоражение...\033[0m")
+        print("Потеряно опыта:")
         for i in items:
             exp = i.exp * data["modifications"]["expirience"]["lose"]
-            print(locale["level"]["lose_exp"].format(
+            print("  " + locale["level"]["lose_exp"].format(
                 player=i.name,
                 exp=round(exp - i.exp, 1),
                 old_exp=round(i.exp, 1),

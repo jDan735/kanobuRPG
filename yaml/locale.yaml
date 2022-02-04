@@ -26,18 +26,16 @@ check: |
 
 level:
     get_exp: "{player} получил {exp} ед. опыта."
-    get_exp_win: "{player} получил {exp} ед. опыта за победу! [{old_exp} -> {new_exp}]"
-    lose_exp: "{player} потерял {exp} ед. опыта за поражение. [{old_exp} -> {new_exp}]"
+    get_exp_win: "{player} {exp} ед. опыта. [{old_exp} -> {new_exp}]"
+    lose_exp: "{player} {exp} ед. опыта. [{old_exp} -> {new_exp}]"
 
 stats:
-    level_up: | 
-        {player} увеличил уровень до {level}.
-        Характеристики обновлены:
-    health: "Здоровье: {health} -> {new_health}"
-    min_attack: "Мин. урон: {min_attack} -> {new_min_attack}"
-    max_attack: "Макс. атака: {max_attack} -> {new_max_attack}"
-    defence: "Защита: {defence} -> {new_defence}"
-    exp: "Опыт для УР {level}: {exp} -> {new_exp}"
+    level_up: "\n{player} увеличил уровень до {level}."
+    health: "  Здоровье: {health} -> {new_health}"
+    min_attack: "  Мин. урон: {min_attack} -> {new_min_attack}"
+    max_attack: "  Макс. атака: {max_attack} -> {new_max_attack}"
+    defence: "  Защита: {defence} -> {new_defence}"
+    exp: "  Опыт для УР {level}: {exp} -> {new_exp}"
 
 settings: |
     1. Восстановить здоровье
