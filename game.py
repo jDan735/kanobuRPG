@@ -19,26 +19,38 @@ class Game:
 
     def menu(self):
         while True:
-            print(locale["menu"][0])
-            print(locale["menu"][1])
+            print("""
+  _                         _                     
+ | | __ __ _  _ __    ___  | |__   _   _ 
+ | |/ // _` || '_ \  / _ \ | '_ \ | | | |
+ |   <| (_| || | | || (_) || |_) || |_| |
+ |_|\_ \__,_||_| |_| \___/ |_.__/  \__,_|
+      ___  ___   ___        ___ 
+     | _ \| _ \ / __| __ __|_  )
+     |   /|  _/| (_ | \ V / / / 
+     |_|_\|_|   \___|  \_/ /___|.0.0
+            """)
+            print(locale["menu"])
             choice = input(">>> ")
-            if choice in ["1", "2", "3"]:
-                game.menu_choice(choice)
-                break
-            else:
-                break
 
-    def menu_choice(self, choice):
-        if choice == "1":
+            if choice in ("1", "2", "3"):
+                game.menu_choice(int(choice))
+                
+            break
+
+    def menu_choice(self, choice: int):
+        if choice == 1:
             game.battle()
-        if choice == "2":
+        if choice == 2:
             game.check_kanobu()
-        if choice == "3":
+        if choice == 3:
             game.settings()
 
     def settings(self):
         while True:
-            print("1. Восстановить здоровье")
+            print()
+            print(locale["settings"])
+
             choice = input(">>> ")
             if choice in ["1"]:
                 if int(choice) == 1:
@@ -54,19 +66,18 @@ class Game:
                 status_ = "[МЕРТВ] "
             else:
                 status_ = ""
-            print(locale["check"][0].format(
+            print(locale["check"].format(
                 status=status_,
                 name=x.name,
-                maxhealth=x.maxhealth,
+                max_health=x.maxhealth,
                 health=x.health,
-                minattack=x.minattack,
-                maxattack=x.maxattack,
+                min_attack=x.minattack,
+                max_attack=x.maxattack,
                 defence=x.defence,
                 level=x.level,
                 levelup_exp=x.levelup_exp,
                 exp=round(x.exp, 1)
             ))
-        print("\n")
 
     def init_enemy(self):
         global rock_enemy, paper_enemy, scissors_enemy
@@ -83,8 +94,10 @@ class Game:
         teamlevel = rock.level + paper.level + scissors.level
         botlevel = rock_enemy.level + paper_enemy.level + scissors_enemy.level
 
-        print(locale["battle"][0].format(teamlevel=teamlevel,
-                                         botlevel=botlevel))
+        print(locale["battle"]["started"].format(
+            team_level=teamlevel,
+            bot_level=botlevel)
+        )
 
         while True:
             for item in botitems:
@@ -92,11 +105,11 @@ class Game:
                     botitems.remove(item)
 
             # начало боя и вывод текста
-            print(locale["battle"][1])
-            for i, item in enumerate(items):
-                print(locale["battle"][2].format(
-                    number=i+1,
-                    kanobu=item.name,
+            print(locale["battle"]["choice_text"])
+            for i, item in enumerate(items, start=1):
+                print(locale["battle"]["choice_element"].format(
+                    i=i,
+                    player=item.name,
                     health=item.health)
                 )
 
@@ -147,7 +160,7 @@ class Game:
         for item in weakness:
             if turn == "player":
                 if item == [self.botchoice.type, self.playerchoice.type]:
-                    print(locale["battle"][3])
+                    print(locale["battle"]["not_effective"])
                     return 0.6
                 else:
                     return 1
@@ -158,7 +171,6 @@ class Game:
                     return 1
 
     def step(self, action):
-
         if action == "attack":
             source_damage = randint(self.playerchoice.minattack,
                                     self.playerchoice.maxattack)
@@ -170,15 +182,15 @@ class Game:
 
             self.botchoice.health -= damage
 
-            print(locale["battle"][4].format(damage=damage))
+            print(locale["battle"]["damage"].format(damage=damage))
 
             if self.botchoice.health <= 0:
                 exp = ((4 + 1.3 * (self.playerchoice.level * 0.7) + (0.7 * randint(1, 5))) * uniform(0.8, 1.5)) * 0.9
 
                 self.playerchoice.exp += exp
 
-                print(locale["level"][0].format(
-                    kanobu=self.playerchoice.name,
+                print(locale["level"]["get_exp"].format(
+                    player=self.playerchoice.name,
                     exp=round(exp, 1))
                 )
 
@@ -190,35 +202,37 @@ class Game:
             if damage <= 0:
                 damage = 1
             self.playerchoice.health -= damage
-            print(locale["battle"][5].format(
-                playerchoice=self.playerchoice.name.lower(),
+            print(locale["battle"]["attack"].format(
+                player_choice=self.playerchoice.name.lower(),
                 damage=damage
             ))
 
     def win(self):
         items = [rock, scissors, paper]
-        print("Победа!")
+        print("\n\033[32mПобеда!\033[0m")
+        print("Получено опыта:")
         for i in items:
             exp = i.exp * data["modifications"]["expirience"]["win"]
-            print(locale["level"][1].format(
-                kanobu=i.name,
+            print("  " + locale["level"]["get_exp_win"].format(
+                player=i.name,
                 exp=round(exp - i.exp, 1),
-                expbefore=round(i.exp, 1),
-                expafter=round(exp, 1))
+                old_exp=round(i.exp, 1),
+                new_exp=round(exp, 1))
             )
         for i in items:
             i.level_up()
 
     def lose(self):
         items = [rock, scissors, paper]
-        print("Поражение...")
+        print("\n\033[31mПоражение...\033[0m")
+        print("Потеряно опыта:")
         for i in items:
             exp = i.exp * data["modifications"]["expirience"]["lose"]
-            print(locale["level"][2].format(
-                kanobu=i.name,
+            print("  " + locale["level"]["lose_exp"].format(
+                player=i.name,
                 exp=round(exp - i.exp, 1),
-                expbefore=round(i.exp, 1),
-                expafter=round(exp, 1))
+                old_exp=round(i.exp, 1),
+                new_exp=round(exp, 1))
             )
             i.level_up()
 
@@ -226,7 +240,7 @@ class Game:
         items = [rock, paper, scissors]
         for x in items:
             x.health = x.maxhealth
-        print("Здоровье восстановлено.")
+        print(locale["health"])
 
 
 class Kanobu:
@@ -274,35 +288,35 @@ class Kanobu:
                 self.defence += defence_up
                 self.levelup_exp += levelexp_up
 
-                print(locale["stats"][0].format(
-                    kanobu=self.name,
+                print(locale["stats"]["level_up"].format(
+                    player=self.name,
                     level=self.level)
                 )
 
-                print(locale["stats"][1].format(
+                print(locale["stats"]["health"].format(
                     health=self.maxhealth - health_up,
-                    newhealth=self.maxhealth)
+                    new_health=self.maxhealth)
                 )
 
-                print(locale["stats"][2].format(
-                    minattack=self.minattack - minattack_up,
-                    newminattack=self.minattack)
+                print(locale["stats"]["min_attack"].format(
+                    min_attack=self.minattack - minattack_up,
+                    new_min_attack=self.minattack)
                 )
 
-                print(locale["stats"][3].format(
-                    maxattack=self.maxattack - maxattack_up,
-                    newmaxattack=self.maxattack)
+                print(locale["stats"]["max_attack"].format(
+                    max_attack=self.maxattack - maxattack_up,
+                    new_max_attack=self.maxattack)
                 )
 
-                print(locale["stats"][4].format(
+                print(locale["stats"]["defence"].format(
                     defence=self.defence - defence_up,
-                    newdefence=self.defence)
+                    new_defence=self.defence)
                 )
 
-                print(locale["stats"][5].format(
+                print(locale["stats"]["exp"].format(
                     level=self.level+1,
                     exp=self.levelup_exp - levelexp_up,
-                    newexp=self.levelup_exp)
+                    new_exp=self.levelup_exp)
                 )
 
                 if self.minattack > self.maxattack:

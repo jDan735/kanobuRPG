@@ -4,33 +4,40 @@ kanobu:
     scissors: "Ножницы"
 
 battle:
-    - "\nБитва началась! [УР {teamlevel} против УР {botlevel}]"
-    - "Выберите предмет:"
-    - "{number}. {kanobu} [HP {health}]"
-    - "Это не очень эффективно..."
-    - "\nВы нанесли {damage} урона!"
-    - "Противник атаковал {playerchoice}! [-{damage}]"
-    - "Вы победили!"
-        
-menu:
-    - "Меню:"
-    - "1. Битва\n2. Характеристики\n3. Настройки"
+    started: Битва началась! [УР {team_level} против УР {bot_level}]
+    choice_text: "Выберите предмет:"
+    choice_element: "{i}. {player} [HP {health}]"
 
-check:
-    - "\n{status}{name}:\nХП {health}/{maxhealth} | АТК {minattack}-{maxattack} | ЗАЩ {defence}\nУР {level} | ОП {exp}/{levelup_exp}"
+    not_effective: "Это не очень эффективно..."
+    damage: "\nВы нанесли {damage} урона!"
+    attack: "Противник атаковал {player_choice}! [-{damage}]"
+    win: "Вы победили!"
+
+menu: |
+    Меню:
+    1. Битва
+    2. Характеристики
+    3. Настройки
+
+check: |
+    {status}{name}:
+      ХП {health}/{max_health} | АТК {min_attack}-{max_attack} | ЗАЩ {defence}
+      УР {level} | ОП {exp}/{levelup_exp}
 
 level:
-    - "{kanobu} получил {exp} ед. опыта."
-    - "{kanobu} получил {exp} ед. опыта за победу! [{expbefore} -> {expafter}]"
-    - "{kanobu} потерял {exp} ед. опыта за поражение. [{expbefore} -> {expafter}]"
+    get_exp: "{player} получил {exp} ед. опыта."
+    get_exp_win: "{player} {exp} ед. опыта. [{old_exp} -> {new_exp}]"
+    lose_exp: "{player} {exp} ед. опыта. [{old_exp} -> {new_exp}]"
 
 stats:
-    - "\n{kanobu} увеличил уровень до {level}.\nХарактеристики обновлены:"
-    - "Здоровье: {health} -> {newhealth}"
-    - "Мин. урон: {minattack} -> {newminattack}"
-    - "Макс. атака: {maxattack} -> {newmaxattack}"
-    - "Защита: {defence} -> {newdefence}"
-    - "Опыт для УР {level}: {exp} -> {newexp}\n"
+    level_up: "\n{player} увеличил уровень до {level}."
+    health: "  Здоровье: {health} -> {new_health}"
+    min_attack: "  Мин. урон: {min_attack} -> {new_min_attack}"
+    max_attack: "  Макс. атака: {max_attack} -> {new_max_attack}"
+    defence: "  Защита: {defence} -> {new_defence}"
+    exp: "  Опыт для УР {level}: {exp} -> {new_exp}"
 
-settings:
-    - "Восстановить здоровье"
+settings: |
+    1. Восстановить здоровье
+
+health: Здоровье восстановлено.
